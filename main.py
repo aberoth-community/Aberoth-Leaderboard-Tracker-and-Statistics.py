@@ -53,6 +53,7 @@ def main():
         search_name = search_name.lower().capitalize()
 
         stats_funcs.print_champ_stats(search_name, champions_dict)
+        print()
         board_funcs.print_champ_board_changes(search_name, champions_dict)
 
     print(f"Calculations execution time: {round(finish-start, 3)} seconds")

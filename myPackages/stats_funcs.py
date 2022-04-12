@@ -7,28 +7,42 @@ def calc_num_change(rank_hist, time_len, current_time=calendar.timegm(time.gmtim
     current_rank = rank_hist[0][0]
     first_rank_in_range = None
     first_time = current_time - time_len
+    rank_change = None
+
     for entry in rank_hist:
         # stops incrementing through previous entries for first rank if outside time range or None rank
-        if (entry[1] < first_time) or (entry[0] is None):
+        if entry[1] < first_time:
             break
+        if entry[0] is None:
+            rank_change = "Not enough data"
+            break
+
         first_rank_in_range = entry[0]
 
-    rank_change = current_rank - first_rank_in_range
+    if rank_change != "Not enough data":
+        rank_change = current_rank - first_rank_in_range
 
     return rank_change
 
 
-def calc_percent_change(value_hist, time_len, current_time=calendar.timegm(time.gmtime())):
+def calc_percent_change(value_hist, time_len, current_time=calendar.timegm(time.gmtime()), decimals=3):
     current_value = value_hist[0][0]
     first_value_in_range = None
     first_time = current_time - time_len
+    percent_change = None
+
     for entry in value_hist:
         # stops incrementing through previous entries for first rank if outside time range or None rank
-        if (entry[1] < first_time) or (entry[0] is None):
+        if entry[1] < first_time:
             break
+        if entry[0] is None:
+            percent_change = "Not enough data to calculate "
+            break
+
         first_value_in_range = entry[0]
 
-    percent_change = ((current_value - first_value_in_range) / first_value_in_range) * 100
+    if percent_change != "Not enough data to calculate ":
+        percent_change = round(((current_value - first_value_in_range) / first_value_in_range) * 100)
 
     return percent_change
 
@@ -79,33 +93,41 @@ def print_champ_stats(search_name, champions_dict, decimals=3):
 
         champ_stat_class = gen_stats(champions_dict[search_name])
 
-        print(f"Champion: {champ_stat_class.champion_name}\n")
+        print(f"Champion: {champ_stat_class.champion_name}")
 
         print("Skill Rank Placement Stats:")
         for entry in champ_stat_class.skill_rank_stats:
-            print(f"\t{entry} {champ_stat_class.skill_rank_stats[entry]}")
+            msg = f"\t{entry}:".ljust(15) + f"{champ_stat_class.skill_rank_stats[entry]}"
+            print(msg)
 
         print("Skill Total Stats:")
         for entry in champ_stat_class.skill_total_stats:
-            print(f"\t{entry} {champ_stat_class.skill_total_stats[entry]}")
+            msg = f"\t{entry}:".ljust(15) + f"{champ_stat_class.skill_total_stats[entry]}"
+            print(msg)
 
         print("Wealth Rank Placement Stats:")
         for entry in champ_stat_class.wealth_rank_stats:
-            print(f"\t{entry} {champ_stat_class.wealth_rank_stats[entry]}")
+            msg = f"\t{entry}:".ljust(15) + f"{champ_stat_class.wealth_rank_stats[entry]}"
+            print(msg)
 
         print("Gold Stats:")
         for entry in champ_stat_class.gold_stats:
-            print(f"\t{entry} {champ_stat_class.gold_stats[entry]['quantity change']} "
-                  f"({round(champ_stat_class.gold_stats[entry]['percent change'], decimals)}% change)")
+            msg = (f"\t{entry}:".ljust(15)
+                   + f"{champ_stat_class.gold_stats[entry]['quantity change']}".ljust(18)
+                   + f"{champ_stat_class.gold_stats[entry]['percent change']}% change".ljust(0))
+            print(msg)
 
         print("Valiant Rank Placement Stats:")
         for entry in champ_stat_class.valiant_rank_stats:
-            print(f"\t{entry} {champ_stat_class.valiant_rank_stats[entry]}")
+            msg = f"\t{entry}:".ljust(15) + f"{champ_stat_class.valiant_rank_stats[entry]}"
+            print(msg)
 
         print("Enemies Vanquished Stats:")
         for entry in champ_stat_class.enemies_vanquished_stats:
-            print(f"\t{entry} {champ_stat_class.enemies_vanquished_stats[entry]['quantity change']} "
-                  f"({round(champ_stat_class.enemies_vanquished_stats[entry]['percent change'], decimals)}% change)")
+            msg = (f"\t{entry}:".ljust(15)
+                   + f"{champ_stat_class.enemies_vanquished_stats[entry]['quantity change']}".ljust(18)
+                   + f"{champ_stat_class.enemies_vanquished_stats[entry]['percent change']}% change".ljust(0))
+            print(msg)
 
     else:
         print("Champion not found in indexed range!")
