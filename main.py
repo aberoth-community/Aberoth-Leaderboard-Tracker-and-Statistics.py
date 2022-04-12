@@ -4,12 +4,20 @@ import time
 from myPackages import multi_process_leaderboard_funcs as multi
 import concurrent.futures
 from pathlib import Path
+from configparser import ConfigParser
+
+def parse_config(path: str):
+    config = ConfigParser()
+    config.read(path)
+    return config
+
 
 def main():
-
+    config = parse_config('config.cfg')
+    champions_data = Path.joinpath(Path.home(), config['general']['path'])
     start = time.perf_counter()
 
-    f = open(f'{Path.home()}\\OneDrive\\Code Data Storage\\champions_data', 'rb')
+    f = open(champions_data, 'rb')
     champions_dict = _pickle.load(f)
     f.close()
 
@@ -46,7 +54,7 @@ def main():
             print("Champion not found in top 10000")
 
     # creates a pickle in a file
-    f = open(f'{Path.home()}\\OneDrive\\Code Data Storage\\champions_data', 'wb')
+    f = open(champions_data, 'wb')
     _pickle.dump(champions_dict, f)
     f.close()
 
