@@ -9,15 +9,18 @@ def calc_num_change(rank_hist, time_len, current_time=calendar.timegm(time.gmtim
     first_time = current_time - time_len
     rank_change = None
 
-    for entry in rank_hist:
-        # stops incrementing through previous entries for first rank if outside time range or None rank
-        if entry[1] < first_time:
-            break
-        if entry[0] is None:
-            rank_change = "Not enough data"
-            break
+    if current_rank is not None:
+        for entry in rank_hist:
+            # stops incrementing through previous entries for first rank if outside time range or None rank
+            if entry[1] < first_time:
+                break
+            if entry[0] is None:
+                rank_change = "Not enough data"
+                break
 
-        first_rank_in_range = entry[0]
+            first_rank_in_range = entry[0]
+    else:
+        rank_change = "Not enough data"
 
     if rank_change != "Not enough data":
         rank_change = current_rank - first_rank_in_range
@@ -31,15 +34,19 @@ def calc_percent_change(value_hist, time_len, current_time=calendar.timegm(time.
     first_time = current_time - time_len
     percent_change = None
 
-    for entry in value_hist:
-        # stops incrementing through previous entries for first rank if outside time range or None rank
-        if entry[1] < first_time:
-            break
-        if entry[0] is None:
-            percent_change = "Not enough data to calculate "
-            break
+    if current_value is not None:
+        for entry in value_hist:
+            # stops incrementing through previous entries for first rank if outside time range or None rank
+            if entry[1] < first_time:
+                break
+            if entry[0] is None:
+                percent_change = "Not enough data to calculate "
+                break
 
-        first_value_in_range = entry[0]
+            first_value_in_range = entry[0]
+
+    else:
+        percent_change = "Not enough data to calculate "
 
     if percent_change != "Not enough data to calculate ":
         percent_change = round(((current_value - first_value_in_range) / first_value_in_range) * 100, decimals)

@@ -57,7 +57,7 @@ def main():
 
         print(f"Calculations execution time: {round(finish-start, 3)} seconds")
 
-        time_out_in_ms = 5 * 1000
+        time_out_in_ms = 15 * 1000
         time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
         user_input = time_limited_input.W_Input.data
         user_input = user_input.lower()
