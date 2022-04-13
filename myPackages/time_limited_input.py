@@ -3,7 +3,7 @@ import tkinter as tk
 def W_Input (label='Input dialog box', timeout=5000):
     w = tk.Tk()
     w.title(label)
-    W_Input.data=''
+    W_Input.data = ''
     wFrame = tk.Frame(w, background="light yellow", padx=20, pady=20)
     wFrame.pack()
     wEntryBox = tk.Entry(wFrame, background="white", width=100)

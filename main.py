@@ -26,7 +26,6 @@ def main():
         with open(champions_data, 'rb') as f:
             champions_dict = _pickle.load(f)
 
-        print(calendar.timegm(time.gmtime()))
         with concurrent.futures.ProcessPoolExecutor() as e:
             # f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful.html')
             # f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest.html')
@@ -39,7 +38,6 @@ def main():
             champions_dict = board_funcs.update_champion_dictionary(
                 champions_dict, f10.result(), f20.result(), f30.result())
 
-        print(calendar.timegm(time.gmtime()))
 
         # disable to prevent accidentally deleting data when the pickle file is being updated from multiple places
         # setting to false won't update the pickle file
@@ -49,7 +47,6 @@ def main():
                 _pickle.dump(champions_dict, f)
 
         # gets time since epoch with a precision of 1 second
-        print(calendar.timegm(time.gmtime()))
 
         finish = time.perf_counter()
 
