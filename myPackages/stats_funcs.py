@@ -42,7 +42,7 @@ def calc_percent_change(value_hist, time_len, current_time=calendar.timegm(time.
         first_value_in_range = entry[0]
 
     if percent_change != "Not enough data to calculate ":
-        percent_change = round(((current_value - first_value_in_range) / first_value_in_range) * 100)
+        percent_change = round(((current_value - first_value_in_range) / first_value_in_range) * 100, decimals)
 
     return percent_change
 
