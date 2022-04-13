@@ -9,7 +9,7 @@ def calc_num_change(rank_hist, time_len, current_time=calendar.timegm(time.gmtim
     first_time = current_time - time_len
     rank_change = None
 
-    if current_rank is not None:
+    if current_rank is not None and first_rank_in_range is not None:
         for entry in rank_hist:
             # stops incrementing through previous entries for first rank if outside time range or None rank
             if entry[1] < first_time:
@@ -34,7 +34,7 @@ def calc_percent_change(value_hist, time_len, current_time=calendar.timegm(time.
     first_time = current_time - time_len
     percent_change = None
 
-    if current_value is not None:
+    if current_value is not None and first_value_in_range is not None:
         for entry in value_hist:
             # stops incrementing through previous entries for first rank if outside time range or None rank
             if entry[1] < first_time:
@@ -90,7 +90,7 @@ def gen_stats(champ):
 def gen_stats_dict(champions_dict):
     stats_dict = {}
     for champ in champions_dict:
-        stats_dict[champ] = gen_stats(champ)
+        stats_dict[champ] = gen_stats(champions_dict[champ])
 
     return stats_dict
 

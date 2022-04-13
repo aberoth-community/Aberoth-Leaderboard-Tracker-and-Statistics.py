@@ -16,7 +16,7 @@ def create_board_dictionary(url):
     board_dict = {}
 
     board_tr = board_soup.select('tr')
-    for i in range(1, 10001):
+    for i in range(1, 100001):
         board_td = board_tr[i].select('td')
 
         # gets the specific cell and gets rid of white space to cast to int

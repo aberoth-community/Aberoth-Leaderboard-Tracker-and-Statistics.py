@@ -28,9 +28,13 @@ def main():
 
         print(calendar.timegm(time.gmtime()))
         with concurrent.futures.ProcessPoolExecutor() as e:
-            f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful.html')
-            f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest.html')
-            f30 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Valiant.html')
+            # f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful.html')
+            # f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest.html')
+            # f30 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Valiant.html')
+
+            f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful_More.html')
+            f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest_More.html')
+            f30 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Valiant_More.html')
 
             champions_dict = board_funcs.update_champion_dictionary(
                 champions_dict, f10.result(), f20.result(), f30.result())
@@ -47,7 +51,7 @@ def main():
         finish = time.perf_counter()
 
         # enabling allows searching a specific user's stats
-        if True:
+        if False:
             search_name = input("Insert the champion you wish to search for:\n")
             search_name = search_name.lower().capitalize()
 
@@ -55,9 +59,16 @@ def main():
             print()
             stats_funcs.print_champ_stats(search_name, champions_dict)
 
-        print(f"Calculations execution time: {round(finish-start, 3)} seconds")
+        if False:
+            stats_dict = stats_funcs.gen_stats_dict(champions_dict)
+            for champ in stats_dict:
+                board_funcs.print_champ_board_changes(champ, champions_dict)
+                print()
+                stats_funcs.print_champ_stats(champ, champions_dict)
 
-        time_out_in_ms = 15 * 1000
+        print(f"\nCalculations execution time: {round(finish-start, 3)} seconds")
+
+        time_out_in_ms = 5400 * 1000
         time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
         user_input = time_limited_input.W_Input.data
         user_input = user_input.lower()
