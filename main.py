@@ -20,9 +20,9 @@ def main():
     config = parse_config('config.cfg')
     champions_data = Path.joinpath(Path.home(), config['general']['path'])
 
-    collecting_data = True
+    running = True
 
-    while collecting_data:
+    while running:
         with open(champions_data, 'rb') as f:
             champions_dict = _pickle.load(f)
 
@@ -41,9 +41,12 @@ def main():
 
         print(calendar.timegm(time.gmtime()))
 
-        # creates a pickle in a file
-        with open(champions_data, 'wb') as f:
-            _pickle.dump(champions_dict, f)
+        # disable to prevent accidentally deleting data when the pickle file is being updated from multiple places
+        # setting to false won't update the pickle file
+        if True:
+            # writes over the pickle file that the data was read in from with the new pickle
+            with open(champions_data, 'wb') as f:
+                _pickle.dump(champions_dict, f)
 
         # gets time since epoch with a precision of 1 second
         print(calendar.timegm(time.gmtime()))
