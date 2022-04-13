@@ -20,7 +20,7 @@ def main():
     config = parse_config('config.cfg')
     champions_data = Path.joinpath(Path.home(), config['general']['path'])
 
-    collecting_data = False
+    collecting_data = True
 
     while collecting_data:
         with open(champions_data, 'rb') as f:
@@ -57,13 +57,14 @@ def main():
 
         print(f"Calculations execution time: {round(finish-start, 3)} seconds")
 
-    time_out_in_ms = 5 * 1000
-    time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
-    user_input = time_limited_input.W_Input.data
-    user_input = user_input.lower()
-    if user_input:
-        print("Safely exiting program")
-        quit()
+        time_out_in_ms = 5 * 1000
+        time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
+        user_input = time_limited_input.W_Input.data
+        user_input = user_input.lower()
+
+        if user_input:
+            print("\nSafely exiting program")
+            quit()
 
 
 if __name__ == "__main__":
