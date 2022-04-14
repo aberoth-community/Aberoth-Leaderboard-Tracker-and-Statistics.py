@@ -6,6 +6,16 @@ from bs4 import BeautifulSoup
 from myPackages import classes
 
 
+# Returns True if the index exists, returns False if it doesn't
+def check_index(container, index):
+    try:
+        container_value = container[index]
+    except IndexError:
+        return False
+    return True
+
+
+# creates a dictionary of the stats for all the champions on the board for the URL
 def create_board_dictionary(url):
     print(f"Requesting {url}: {time.asctime(time.gmtime())}")
     board_page = requests.get(url, headers={"User-Agent": "42.0.2311.135"})
@@ -31,6 +41,8 @@ def create_board_dictionary(url):
     return board_dict
 
 
+# adds the stats for each champion from the passed in dictionaries to their champion class
+# creates a class for the champion if they don't already have one
 def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_dict,
                                time_last_updated=calendar.timegm(time.gmtime())):
     for champ in skill_dict:
@@ -39,12 +51,18 @@ def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_
             champions_dict[champ].most_skillful_rank_hist.insert(0, (skill_dict[champ][1], time_last_updated))
             champions_dict[champ].skill_total_hist.insert(0, (skill_dict[champ][0], time_last_updated))
 
-            # checks to see if the entry data is duplicate
-            if champions_dict[champ].most_skillful_rank_hist[0][0] == champions_dict[champ].most_skillful_rank_hist[1][0]:
-                champions_dict[champ].most_skillful_rank_hist.pop(1)
+            # checks to see if the entry data is duplicate inbetween periods where the ranking value doesn't change
+            if check_index(champions_dict[champ].most_skillful_rank_hist, 2):
+                if (champions_dict[champ].most_skillful_rank_hist[0][0] ==
+                        champions_dict[champ].most_skillful_rank_hist[1][0] and
+                        champions_dict[champ].most_skillful_rank_hist[1][0] ==
+                        champions_dict[champ].most_skillful_rank_hist[2][0]):
+                    champions_dict[champ].most_skillful_rank_hist.pop(1)
 
-            if champions_dict[champ].skill_total_hist[0][0] == champions_dict[champ].skill_total_hist[1][0]:
-                champions_dict[champ].skill_total_hist.pop(1)
+            if check_index(champions_dict[champ].skill_total_hist, 2):
+                if (champions_dict[champ].skill_total_hist[0][0] == champions_dict[champ].skill_total_hist[1][0] and
+                        champions_dict[champ].skill_total_hist[1][0] == champions_dict[champ].skill_total_hist[2][0]):
+                    champions_dict[champ].skill_total_hist.pop(1)
 
         else:
             # dynamically creates a champion class if one doesn't exist for the champion and adds it to the champion_dict
@@ -58,11 +76,17 @@ def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_
             champions_dict[champ].gold_hist.insert(0, (wealth_dict[champ][0], time_last_updated))
 
             # checks to see if the entry data is duplicate
-            if champions_dict[champ].wealthiest_rank_hist[0][0] == champions_dict[champ].wealthiest_rank_hist[1][0]:
-                champions_dict[champ].wealthiest_rank_hist.pop(1)
+            if check_index(champions_dict[champ].wealthiest_rank_hist, 2):
+                if (champions_dict[champ].wealthiest_rank_hist[0][0] == champions_dict[champ].wealthiest_rank_hist[1][
+                    0] and
+                    champions_dict[champ].wealthiest_rank_hist[1][0] ==
+                    champions_dict[champ].wealthiest_rank_hist[2][0]):
+                    champions_dict[champ].wealthiest_rank_hist.pop(1)
 
-            if champions_dict[champ].gold_hist[0][0] == champions_dict[champ].gold_hist[1][0]:
-                champions_dict[champ].gold_hist.pop(1)
+            if check_index(champions_dict[champ].gold_hist, 2):
+                if (champions_dict[champ].gold_hist[0][0] == champions_dict[champ].gold_hist[1][0] and
+                        champions_dict[champ].gold_hist[1][0] == champions_dict[champ].gold_hist[2][0]):
+                    champions_dict[champ].gold_hist.pop(1)
 
         else:
             # dynamically creates a champion class if one doesn't exist for the champion and adds it to the champion_dict
@@ -76,10 +100,16 @@ def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_
             champions_dict[champ].enemies_vanquished_hist.insert(0, (valiant_dict[champ][0], time_last_updated))
 
             # checks to see if the entry data is duplicate
-            if champions_dict[champ].valiant_rank_hist[0][0] == champions_dict[champ].valiant_rank_hist[1][0]:
-                champions_dict[champ].valiant_rank_hist.pop(1)
-            if champions_dict[champ].enemies_vanquished_hist[0][0] == champions_dict[champ].enemies_vanquished_hist[1][0]:
-                champions_dict[champ].enemies_vanquished_hist.pop(1)
+            if check_index(champions_dict[champ].valiant_rank_hist, 2):
+                if (champions_dict[champ].valiant_rank_hist[0][0] == champions_dict[champ].valiant_rank_hist[1][0] and
+                    champions_dict[champ].valiant_rank_hist[1][0] == champions_dict[champ].valiant_rank_hist[2][0]):
+                    champions_dict[champ].valiant_rank_hist.pop(1)
+
+            if check_index(champions_dict[champ].enemies_vanquished_hist, 2):
+                if (champions_dict[champ].enemies_vanquished_hist[0][0] == champions_dict[champ].enemies_vanquished_hist[1][
+                    0] and champions_dict[champ].enemies_vanquished_hist[1][0] == champions_dict[champ].enemies_vanquished_hist[2][
+                    0]):
+                    champions_dict[champ].enemies_vanquished_hist.pop(1)
 
             # allows us to call champion methods on dynamically named classes
             # classmap = {f'{champ}': classes.Champion}
@@ -93,6 +123,7 @@ def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_
     return champions_dict
 
 
+# prints the changes to each statistic for a champion
 def print_champ_board_changes(search_name, champions_dict):
     if search_name in champions_dict:
         print(

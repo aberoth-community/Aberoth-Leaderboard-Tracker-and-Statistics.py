@@ -1,4 +1,3 @@
-import calendar
 import _pickle
 import time
 from myPackages import leaderboard_funcs as board_funcs
@@ -21,37 +20,35 @@ def main():
     champions_data = Path.joinpath(Path.home(), config['general']['path'])
 
     running = True
+    updating_data = False
 
     while running:
         with open(champions_data, 'rb') as f:
             champions_dict = _pickle.load(f)
 
-        with concurrent.futures.ProcessPoolExecutor() as e:
-            # f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful.html')
-            # f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest.html')
-            # f30 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Valiant.html')
+        if updating_data:
+            with concurrent.futures.ProcessPoolExecutor() as e:
 
-            f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful_More.html')
-            f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest_More.html')
-            f30 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Valiant_More.html')
+                f10 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Skillful_More.html')
+                f20 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Wealthiest_More.html')
+                f30 = e.submit(board_funcs.create_board_dictionary, 'https://aberoth.com/highscore/Most_Valiant_More.html')
 
-            champions_dict = board_funcs.update_champion_dictionary(
-                champions_dict, f10.result(), f20.result(), f30.result())
+                champions_dict = board_funcs.update_champion_dictionary(
+                    champions_dict, f10.result(), f20.result(), f30.result())
 
-
-        # disable to prevent accidentally deleting data when the pickle file is being updated from multiple places
-        # setting to false won't update the pickle file
-        if True:
-            # writes over the pickle file that the data was read in from with the new pickle
-            with open(champions_data, 'wb') as f:
-                _pickle.dump(champions_dict, f)
+            # disable to prevent accidentally deleting data when the pickle file is being updated from multiple places
+            # setting to false won't update the pickle file
+            if updating_data:
+                # writes over the pickle file that the data was read in from with the new pickle
+                with open(champions_data, 'wb') as f:
+                    _pickle.dump(champions_dict, f)
 
         # gets time since epoch with a precision of 1 second
 
         finish = time.perf_counter()
 
         # enabling allows searching a specific user's stats
-        if False:
+        if True:
             search_name = input("Insert the champion you wish to search for:\n")
             search_name = search_name.lower().capitalize()
 
@@ -68,14 +65,15 @@ def main():
 
         print(f"\nCalculations execution time: {round(finish-start, 3)} seconds")
 
-        time_out_in_ms = 5400 * 1000
-        time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
-        user_input = time_limited_input.W_Input.data
-        user_input = user_input.lower()
+        if updating_data:
+            time_out_in_ms = 5400 * 1000
+            time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
+            user_input = time_limited_input.W_Input.data
+            user_input = user_input.lower()
 
-        if user_input:
-            print("\nSafely exiting program")
-            quit()
+            if user_input:
+                print("\nSafely exiting program")
+                quit()
 
 
 if __name__ == "__main__":
