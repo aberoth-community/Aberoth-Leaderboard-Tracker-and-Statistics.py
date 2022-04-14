@@ -20,7 +20,7 @@ def main():
     champions_data = Path.joinpath(Path.home(), config['general']['path'])
 
     running = True
-    updating_data = False
+    updating_data = True
 
     while running:
         with open(champions_data, 'rb') as f:
