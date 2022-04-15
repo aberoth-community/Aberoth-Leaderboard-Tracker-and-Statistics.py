@@ -52,7 +52,7 @@ def make_yticks_ints(axs, y_num):
                 yticks.insert(0, yticks[0] - 1)
                 yticks.insert(0, yticks[0] - 1)
 
-    if check_index(yticks, 1) and yticks[0] == 0 and yticks[1] != 1:
+    if check_index(yticks, 1) and yticks[0] == 0 and yticks[1] != 1 and y_num == 'y2':
         yticks[0] = 1
 
     return yticks
