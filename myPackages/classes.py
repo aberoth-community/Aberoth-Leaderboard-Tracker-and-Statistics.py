@@ -20,7 +20,7 @@ class Champion:
         self.time_last_updated = time_last_updated
 
 
-# stores the statistics associated with hte board history for a champion
+# stores the statistics associated with the board history for a champion
 class StatContainer:
     def __init__(self, champion_name, time_last_updated=time.gmtime()):
 

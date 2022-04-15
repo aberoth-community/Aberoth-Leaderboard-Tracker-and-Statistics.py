@@ -1,7 +1,7 @@
 import _pickle
 import time
 from myPackages import leaderboard_funcs as board_funcs
-from myPackages import stats_funcs, time_limited_input
+from myPackages import stats_funcs, time_limited_input, plot_stats
 import concurrent.futures
 from pathlib import Path
 from configparser import ConfigParser
@@ -20,11 +20,15 @@ def main():
     champions_data = Path.joinpath(Path.home(), config['general']['path'])
 
     running = True
-    updating_data = True
+    updating_data = False
+    clear_data = False
 
     while running:
-        with open(champions_data, 'rb') as f:
-            champions_dict = _pickle.load(f)
+        if clear_data:
+            champions_dict = {}
+        else:
+            with open(champions_data, 'rb') as f:
+                champions_dict = _pickle.load(f)
 
         if updating_data:
             with concurrent.futures.ProcessPoolExecutor() as e:
@@ -54,7 +58,16 @@ def main():
 
             board_funcs.print_champ_board_changes(search_name, champions_dict)
             print()
-            stats_funcs.print_champ_stats(search_name, champions_dict)
+            # stats_funcs.print_champ_stats(search_name, champions_dict)
+            if search_name in champions_dict:
+                champ = champions_dict[search_name]
+
+                plot_stats.plot_2y_axis(search_name, champ.skill_total_hist, champ.most_skillful_rank_hist,
+                                        "Skill Total", "Most Skillful Rank", marker='o')
+                plot_stats.plot_2y_axis(search_name, champ.gold_hist, champ.wealthiest_rank_hist,
+                                        "Banked Gold", "Wealthiest Rank", marker='o')
+                plot_stats.plot_2y_axis(search_name, champ.enemies_vanquished_hist, champ.valiant_rank_hist,
+                                        "Enemies Vanquishes", "Most Valiant Rank", marker='o')
 
         if False:
             stats_dict = stats_funcs.gen_stats_dict(champions_dict)
