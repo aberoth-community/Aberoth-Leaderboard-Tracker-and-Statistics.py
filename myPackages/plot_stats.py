@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 import matplotlib.dates as mdate
-import matplotlib.patheffects as PathEffects
+from matplotlib import patheffects
 import datetime as dt
 import time
 import calendar
@@ -139,7 +139,7 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
     title = plt.title(champ_name, fontsize=bigger_size, color=axes_xcolor)
     # adds a title outline
-    title.set_path_effects([PathEffects.withStroke(linewidth=4, foreground='#202225')])
+    title.set_path_effects([patheffects.withStroke(linewidth=4, foreground='#202225')])
 
     date_format = mdate.DateFormatter('%I:%M %p, %b %d')
 
