@@ -3,36 +3,56 @@ import matplotlib.dates as mdate
 import datetime as dt
 import time
 import calendar
+# noinspection PyUnresolvedReferences
 import numpy as np
+from myPackages.leaderboard_funcs import check_index
 
 
-# Pain :'(
 # gets the y ticks from the passed in axis and returns an appropriate replacement list of ticks that only includes ints
-def make_yticks_ints(axs):
+def make_yticks_ints(axs, y_num):
     init_yticks_np_arr = axs.get_yticks()
-    init_yticks = init_yticks_np_arr.tolist()
-    yticks = []
 
-    for i in init_yticks:
+    # this uses numpy, don't remove import
+    float_yticks = init_yticks_np_arr.tolist()
+
+    yticks = []
+    for i in float_yticks:
         # have to round to two places because np.tolist() adds a very small decimal place
         if round(i, 2).is_integer() and int(i) != 0:
             yticks.append(int(i))
 
-    # pads ytick arrays with few tick counts
-    if yticks[0] == 1:
-        yticks.append(2)
-        yticks.append(3)
-        yticks.append(4)
-        yticks.append(5)
-        yticks.insert(0, 0)
-    elif len(yticks) < 4:
-        plus_tick_amount = 5-len(yticks)
-        for i in range(1, plus_tick_amount):
-            yticks.append(yticks[0] + i)
-        yticks.insert(0, yticks[0] - 1)
-        yticks.insert(0, yticks[0] - 1)
+    if check_index(yticks, 0):
+        if y_num == 'y1':
+            # pads ytick arrays with few tick counts
+            if yticks[0] == 1:
+                yticks.insert(0, 2)
+                yticks.insert(0, 3)
+                yticks.insert(0, 4)
+                yticks.insert(0, 5)
+                yticks.append(0)
+            elif len(yticks) < 4:
+                plus_tick_amount = 5-len(yticks)
+                for i in range(1, plus_tick_amount):
+                    yticks.insert(0, yticks[0] - 1)
+                yticks.append(yticks[-1] + 1)
+                yticks.append(yticks[-1] + 1)
+        elif y_num == 'y2':
+            # pads ytick arrays with few tick counts
+            if yticks[0] == 1:
+                yticks.append(2)
+                yticks.append(3)
+                yticks.append(4)
+                yticks.append(5)
+                yticks.insert(0, 0)
+            elif len(yticks) < 4:
+                plus_tick_amount = 5-len(yticks)
+                for i in range(1, plus_tick_amount):
+                    yticks.append(yticks[0] + i)
+                yticks.insert(0, yticks[0] - 1)
+                yticks.insert(0, yticks[0] - 1)
 
     return yticks
+
 
 # plots two sets of data that share an x-axis
 def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, current_time=calendar.timegm(time.gmtime()), drawstyle='default', marker='', linestyle='solid'):
@@ -116,15 +136,26 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
     ax2.xaxis.set_major_formatter(date_format)
 
     # this chunk makes ylabels that are 0 appear invisible, doing so provides a visual margin between rank one and zero
-    new_y2_ticks = make_yticks_ints(ax2)
-    print(new_y2_ticks)
+    new_y2_ticks = make_yticks_ints(ax2, 'y2')
     ax2.set_yticks(new_y2_ticks)
-    if new_y2_ticks[0] == 0:
+    if check_index(new_y2_ticks, 0) and new_y2_ticks[0] == 0:
         y2_ticks_labels = ax2.get_yticklabels()
         y2_ticks_labels[0].set_alpha(0)
 
+    new_y1_ticks = make_yticks_ints(ax1, 'y1')
+    ax1.set_yticks(new_y1_ticks)
+    if check_index(new_y1_ticks, 0) and new_y1_ticks[0] == 0:
+        y1_ticks_labels = ax1.get_yticklabels()
+        y1_ticks_labels[0].set_alpha(0)
+
     fig.legend(loc='upper left')
     ax2.invert_yaxis()
+
+    if not check_index(new_y2_ticks, 0):
+        props = dict(boxstyle='round', facecolor='ivory', alpha=0.7)
+        ax2.text(0.5, 0.5, "Not Enough Data!", transform=ax2.transAxes, fontsize=24,
+                 va='center', ha='center', bbox=props)
+
     fig.tight_layout()
     plt.show()
 
