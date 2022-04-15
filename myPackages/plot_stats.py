@@ -1,5 +1,6 @@
 from matplotlib import pyplot as plt
 import matplotlib.dates as mdate
+import matplotlib.patheffects as PathEffects
 import datetime as dt
 import time
 import calendar
@@ -18,7 +19,7 @@ def make_yticks_ints(axs, y_num):
     yticks = []
     for i in float_yticks:
         # have to round to two places because np.tolist() adds a very small decimal place
-        if round(i, 2).is_integer() and int(i) != 0:
+        if round(i, 2).is_integer() and int(i) >= 0:
             yticks.append(int(i))
 
     if check_index(yticks, 0):
@@ -50,6 +51,9 @@ def make_yticks_ints(axs, y_num):
                     yticks.append(yticks[0] + i)
                 yticks.insert(0, yticks[0] - 1)
                 yticks.insert(0, yticks[0] - 1)
+
+    if check_index(yticks, 1) and yticks[0] == 0 and yticks[1] != 1:
+        yticks[0] = 1
 
     return yticks
 
@@ -94,7 +98,7 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
     ax1_ycolor = '#EEAF29'
     ax2_ycolor = '#7F8AE8'
-    axes_xcolor = '#F6F6F6'
+    axes_xcolor = '#F8F8FF'
 
     plt.rc('font', size=small_size)  # controls default text sizes
     plt.rc('axes', titlesize=small_size)  # fontsize of the axes title
@@ -109,7 +113,12 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
     # ax1.set_xlabel(xlabel, color='#F2F2ED')
     # ax1.set_ylabel(y1label, color='#EEAF29')
-    ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=3)
+    ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=2)
+
+    # adds line glow to the plot
+    #ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=4, alpha=0.4)
+    #ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=6, alpha=0.2)
+
     ax1.tick_params(axis='y', labelcolor=ax1_ycolor)
     ax1.grid(color='#36393F')
 
@@ -128,7 +137,9 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
         # ax1.spines[bar].set_linestyle('dashed')
         # ax1.spines[bar].set_capstyle('butt')
 
-    plt.title(champ_name, fontsize=bigger_size, color=axes_xcolor)
+    title = plt.title(champ_name, fontsize=bigger_size, color=axes_xcolor)
+    # adds a title outline
+    title.set_path_effects([PathEffects.withStroke(linewidth=4, foreground='#202225')])
 
     date_format = mdate.DateFormatter('%I:%M %p, %b %d')
 
@@ -144,9 +155,6 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
     new_y1_ticks = make_yticks_ints(ax1, 'y1')
     ax1.set_yticks(new_y1_ticks)
-    if check_index(new_y1_ticks, 0) and new_y1_ticks[0] == 0:
-        y1_ticks_labels = ax1.get_yticklabels()
-        y1_ticks_labels[0].set_alpha(0)
 
     fig.legend(loc='upper left')
     ax2.invert_yaxis()
