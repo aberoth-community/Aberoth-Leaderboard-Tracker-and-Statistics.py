@@ -94,7 +94,7 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
     small_size = 10
     medium_size = 10
-    bigger_size = 20
+    bigger_size = 30
 
     ax1_ycolor = '#EEAF29'
     ax2_ycolor = '#7F8AE8'
@@ -146,23 +146,27 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
     fig.autofmt_xdate()
     ax2.xaxis.set_major_formatter(date_format)
 
-    # this chunk makes ylabels that are 0 appear invisible, doing so provides a visual margin between rank one and zero
-    new_y2_ticks = make_yticks_ints(ax2, 'y2')
-    ax2.set_yticks(new_y2_ticks)
-    if check_index(new_y2_ticks, 0) and new_y2_ticks[0] == 0:
-        y2_ticks_labels = ax2.get_yticklabels()
-        y2_ticks_labels[0].set_alpha(0)
-
-    new_y1_ticks = make_yticks_ints(ax1, 'y1')
-    ax1.set_yticks(new_y1_ticks)
-
-    fig.legend(loc='upper left')
     ax2.invert_yaxis()
 
-    if not check_index(new_y2_ticks, 0):
+    if not len(y1) or not len(y2):
         props = dict(boxstyle='round', facecolor='ivory', alpha=0.7)
-        ax2.text(0.5, 0.5, "Not Enough Data!", transform=ax2.transAxes, fontsize=24,
+        ax2.text(0.5, 0.5, "Not Enough Data!", transform=ax2.transAxes, fontsize=36,
                  va='center', ha='center', bbox=props)
+        ax1.set_yticks([])
+        ax1.set_xticks([])
+        ax2.set_yticks([])
+        fig.legend(bbox_to_anchor=(0.5, 0.70), loc='center')
+    else:
+        # this chunk makes ylabels that are 0 appear invisible, doing so provides a visual margin between rank one and zero
+        new_y2_ticks = make_yticks_ints(ax2, 'y2')
+        ax2.set_yticks(new_y2_ticks)
+        if check_index(new_y2_ticks, 0) and new_y2_ticks[0] == 0:
+            y2_ticks_labels = ax2.get_yticklabels()
+            y2_ticks_labels[0].set_alpha(0)
+
+        new_y1_ticks = make_yticks_ints(ax1, 'y1')
+        ax1.set_yticks(new_y1_ticks)
+        fig.legend(loc='upper left')
 
     fig.tight_layout()
     plt.show()
