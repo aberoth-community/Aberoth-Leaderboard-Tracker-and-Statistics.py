@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 import matplotlib.dates as mdate
-from matplotlib import patheffects
+from matplotlib import patheffects, ticker
 import datetime as dt
 import time
 import calendar
@@ -31,8 +31,8 @@ def make_yticks_ints(axs, y_num):
                 yticks.insert(0, 4)
                 yticks.insert(0, 5)
                 yticks.append(0)
-            elif len(yticks) < 4:
-                plus_tick_amount = 5-len(yticks)
+            elif len(yticks) < 5:
+                plus_tick_amount = 4-len(yticks)
                 for i in range(1, plus_tick_amount):
                     yticks.insert(0, yticks[0] - 1)
                 yticks.append(yticks[-1] + 1)
@@ -45,10 +45,10 @@ def make_yticks_ints(axs, y_num):
                 yticks.append(4)
                 yticks.append(5)
                 yticks.insert(0, 0)
-            elif len(yticks) < 4:
-                plus_tick_amount = 5-len(yticks)
+            elif len(yticks) < 5:
+                plus_tick_amount = 4-len(yticks)
                 for i in range(1, plus_tick_amount):
-                    yticks.append(yticks[0] + i)
+                    yticks.append(yticks[-1] + 1)
                 yticks.insert(0, yticks[0] - 1)
                 yticks.insert(0, yticks[0] - 1)
 
@@ -166,6 +166,11 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
         new_y1_ticks = make_yticks_ints(ax1, 'y1')
         ax1.set_yticks(new_y1_ticks)
+        ax1.ticklabel_format(useOffset=False, style='plain', axis='y')
+        ax2.ticklabel_format(useOffset=False, style='plain', axis='y')
+        ax1.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, p: format(int(y), ',')))
+        ax2.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, p: format(int(y), ',')))
+
         fig.legend(loc='upper left')
 
     fig.tight_layout()

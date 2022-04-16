@@ -78,7 +78,7 @@ def main():
 
         print(f"\nCalculations execution time: {round(finish-start, 3)} seconds")
 
-        if updating_data:
+        if False:
             time_out_in_ms = 5400 * 1000
             time_limited_input.W_Input('Type anything to exit program', timeout=time_out_in_ms)
             user_input = time_limited_input.W_Input.data
@@ -87,7 +87,8 @@ def main():
             if user_input:
                 print("\nSafely exiting program")
                 quit()
-
+        if updating_data:
+            time.sleep(5400)
 
 if __name__ == "__main__":
     main()
