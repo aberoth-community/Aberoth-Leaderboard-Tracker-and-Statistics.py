@@ -113,7 +113,7 @@ def plot_2y_axis(champ_name, data1, data2, y1label, y2label, time_len=86400, cur
 
     # ax1.set_xlabel(xlabel, color='#F2F2ED')
     # ax1.set_ylabel(y1label, color='#EEAF29')
-    ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=2)
+    ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=3)
 
     # adds line glow to the plot
     #ax1.plot_date(x1, y1, color=ax1_ycolor, drawstyle=drawstyle, label=y1label, linestyle=linestyle, linewidth=4, alpha=0.4)

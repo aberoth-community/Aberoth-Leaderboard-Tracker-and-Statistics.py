@@ -43,8 +43,9 @@ def create_board_dictionary(url):
 
 # adds the stats for each champion from the passed in dictionaries to their champion class
 # creates a class for the champion if they don't already have one
-def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_dict,
-                               time_last_updated=calendar.timegm(time.gmtime())):
+def update_champion_dictionary(champions_dict, skill_dict, wealth_dict, valiant_dict):
+    time_last_updated = calendar.timegm(time.gmtime())
+
     for champ in skill_dict:
         if champ in champions_dict:
             # updates the current champion information if they're already in the champion_dict

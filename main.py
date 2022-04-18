@@ -23,6 +23,14 @@ def main():
     updating_data = False
     clear_data = False
 
+    one_day = 86400
+    times_lens = {
+        'one_day': one_day,
+        'one_week': one_day * 7,
+        'thirty_days': one_day * 30,
+        'half_a_year': one_day * 182.5,
+        'one_year': one_day * 365}
+
     while running:
         if clear_data:
             champions_dict = {}
@@ -63,11 +71,11 @@ def main():
                 champ = champions_dict[search_name]
 
                 plot_stats.plot_2y_axis(search_name, champ.skill_total_hist, champ.most_skillful_rank_hist,
-                                        "Skill Total", "Most Skillful Rank", marker='o')
+                                        "Skill Total", "Most Skillful Rank", marker='o', time_len=times_lens['one_week'])
                 plot_stats.plot_2y_axis(search_name, champ.gold_hist, champ.wealthiest_rank_hist,
-                                        "Banked Gold", "Wealthiest Rank", marker='o')
+                                        "Banked Gold", "Wealthiest Rank", marker='o', time_len=times_lens['one_week'])
                 plot_stats.plot_2y_axis(search_name, champ.enemies_vanquished_hist, champ.valiant_rank_hist,
-                                        "Enemies Vanquishes", "Most Valiant Rank", marker='o')
+                                        "Enemies Vanquished", "Most Valiant Rank", marker='o', time_len=times_lens['one_week'])
 
         if False:
             stats_dict = stats_funcs.gen_stats_dict(champions_dict)

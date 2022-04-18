@@ -30,7 +30,8 @@ def calc_num_change(rank_hist, time_len, current_time=calendar.timegm(time.gmtim
     return rank_change
 
 
-def calc_percent_change(value_hist, time_len, current_time=calendar.timegm(time.gmtime()), decimals=3):
+def calc_percent_change(value_hist, time_len, decimals=3):
+    current_time = calendar.timegm(time.gmtime())
     current_value = value_hist[0][0]
     first_value_in_range = None
     first_time = current_time - time_len
